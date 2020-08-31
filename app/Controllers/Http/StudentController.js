@@ -1,7 +1,5 @@
 'use strict'
 
-const { group } = require("@adonisjs/framework/src/Route/Manager")
-
 const Database = use('Database')
 const Hash = use('Hash')
 
