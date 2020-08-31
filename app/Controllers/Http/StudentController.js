@@ -38,9 +38,9 @@ class StudentController {
 
         const missingKeys=[]
         if(!first_name) missingKeys.push('first_name')
-        if(!last_name) missingKeys.push('first_name')
-        if(!email) missingKeys.push('first_name')
-        if(!password) missingKeys.push('first_name')
+        if(!last_name) missingKeys.push('last_name')
+        if(!email) missingKeys.push('email')
+        if(!password) missingKeys.push('password')
 
         if(missingKeys.length)
             return {status: 422, error:`${missingKeys} is missing.`, data:undefined}

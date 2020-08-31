@@ -36,16 +36,16 @@ class EnrollmentController {
         const {mark} = request.body
 
         const missingKeys=[]
-        if(!mark) missingKeys.push('first_name')
+        if(!mark) missingKeys.push('mark')
 
         if(missingKeys.length)
             return {status: 422, error:`${missingKeys} is missing.`, data:undefined}
 
         const enrollment = await Database
         .table('enrollments')
-        .insert({mark,student_id})
+        .insert({mark,student_id,subject_id})
 
-        return {status : 200,error : undefined , data : {mark} }
+        return {status : 200,error : undefined , data : {mark,student_id,subject_id} }
     }
 }
 

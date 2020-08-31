@@ -38,7 +38,7 @@ class SubjectController {
         const {title} = request.body
 
         const missingKeys=[]
-        if(!title) missingKeys.push('first_name')
+        if(!title) missingKeys.push('title')
 
         if(missingKeys.length)
             return {status: 422, error:`${missingKeys} is missing.`, data:undefined}
@@ -48,9 +48,9 @@ class SubjectController {
 
         const teacher = await Database
         .table('subjects')
-        .insert({title})
+        .insert({title,teacher_id})
 
-        return {status : 200,error : undefined , data : {title} }
+        return {status : 200,error : undefined , data : {title,teacher_id} }
     }
 }
 
