@@ -1,7 +1,6 @@
 'use strict'
 
 const Database = use('Database')
-const Hash = use('Hash')
 
 function numberTypeParamValidator(number) {
     if(Number.isNaN(parseInt(number))) 
@@ -14,7 +13,7 @@ class GroupController {
     async index(){
         const data = await Database.table('groups')
 
-        return { status : 200 , error : undefined, data : teachers}
+        return { status : 200 , error : undefined, data : groups}
     }
 
     async show({request}){
@@ -31,7 +30,6 @@ class GroupController {
         .first()
 
         return{ status: 200, error : undefined, data : group ||{} }
-        //return teacher || {}
     }
 
     async store ({request}){

@@ -25,13 +25,14 @@ Route.group(()=>{
   // api start here
   Route.get('/teachers','TeacherController.index')
   Route.get('/teachers/:id','TeacherController.show')
-
   Route.post('teachers','TeacherController.store')
 
   Route.get('/groups','GroupController.index')
   Route.get('/groups/:id','GroupController.show')
-
   Route.post('groups','GroupController.store')
 
+  Route.get('/students','StudentController.index')
+  Route.get('/students/:id','StudentController.show')
+  Route.post('students','StudentController.store')
 
 }).prefix('api/v1')
