@@ -1,7 +1,6 @@
 'use strict'
 
 const Database = use('Database')
-const Hash = use('Hash')
 
 function numberTypeParamValidator(number) {
     if(Number.isNaN(parseInt(number))) 
@@ -30,27 +29,57 @@ class SubjectController {
         .where("subject_id",id)
         .first()
 
-        return{ status: 200, error : undefined, data : tracher ||{} }
+        return{ status: 200, error : undefined, data : subjects ||{} }
         //return teacher || {}
     }
 
     async store ({request}){
-        const {title} = request.body
+        const {title,teacher_id} = request.body
 
         const missingKeys=[]
         if(!title) missingKeys.push('title')
 
         if(missingKeys.length)
             return {status: 422, error:`${missingKeys} is missing.`, data:undefined}
-        
 
-        const hashedPassword = await Hash.make(password)
-
-        const teacher = await Database
+        const subject = await Database
         .table('subjects')
         .insert({title,teacher_id})
 
         return {status : 200,error : undefined , data : {title,teacher_id} }
+    }
+
+    async showTeacher({request}){
+        const {id} = request.params
+    }
+
+    async update({request}){
+        const {body,params} = request
+        const {id} = params
+        const {title} = body
+
+        const subjectId = await Database
+        .table('subjects')
+        .where({subject_id:id})
+        .update({title})
+
+        const subject = await Database
+        .table('subjects')
+        .where({subject_id: subjectId})
+        .first()
+
+        return {status: 200, error: undefined, data: subject }
+    }
+
+    async destroy({request}){
+        const {id} = request.params
+
+        await Database
+        .table('subjects')
+        .where({subject_id:id})
+        .delete()
+
+        return {status: 200, error: undefined, data: {massage: 'success' }}
     }
 }
 
