@@ -1,6 +1,7 @@
 'use strict'
 
 const Database = use('Database')
+const Subject = use('App/Models/Subject')
 
 function numberTypeParamValidator(number) {
     if(Number.isNaN(parseInt(number))) 
@@ -10,47 +11,57 @@ function numberTypeParamValidator(number) {
 }
 
 class SubjectController {
-    async index(){
-        const data = await Database.table('subjects')
+    async index({request}){
+        const {references = undefined} = request.qs
+        
+        const subjects = Subject.query()
+        if(references){
+            const extractedRefences = references.split(",")
+            subjects.with(extractedRefences)
+        }
 
-        return { status : 200 , error : undefined, data : subjects}
-    }
+        return { status : 200 , error : undefined, data :await subjects.fetch()}
+        }
 
     async show({request}){
         const { id } = request.params
+        const subject = await Subject.find(id)
+        
+        // const subjects = await Database
+        // .select('*')
+        // .from('subjects')
+        // .where("subject_id",id)
+        // .first()
 
-        const validatedValue = numberTypeParamValidator(id)
-
-        if(validatedValue.error) return {status: 500, error : validatedValue.error, data : undefined}
-
-        const subjects = await Database
-        .select('*')
-        .from('subjects')
-        .where("subject_id",id)
-        .first()
-
-        return{ status: 200, error : undefined, data : subjects ||{} }
+        return{ status: 200, error : undefined, data : subject ||{} }
         //return teacher || {}
     }
 
     async store ({request}){
         const {title,teacher_id} = request.body
+        // const subject = new Subject();
+        // subject.title = title;
+        // subject.teacher_id = teacher_id;
+        // await subject.save()
 
-        const missingKeys=[]
-        if(!title) missingKeys.push('title')
+        // const subject = await Database
+        // .table('subjects')
+        // .insert({title,teacher_id})
 
-        if(missingKeys.length)
-            return {status: 422, error:`${missingKeys} is missing.`, data:undefined}
+        const subject = await Subject.create({title,teacher_id})
 
-        const subject = await Database
-        .table('subjects')
-        .insert({title,teacher_id})
-
-        return {status : 200,error : undefined , data : {title,teacher_id} }
+        return {status : 200,error : undefined , data : subject }
     }
 
     async showTeacher({request}){
         const {id} = request.params
+        const subject = await Database
+        .table('subjects')
+        .where({subject_id: id})
+        .innerJoin('teacher','subjects.teacher_id','teachers.teacher_id')
+        .first()
+
+        return {status: 200, error: undefined, data: subject||{}}
     }
 
     async update({request}){

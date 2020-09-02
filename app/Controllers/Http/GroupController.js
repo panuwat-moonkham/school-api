@@ -11,7 +11,7 @@ function numberTypeParamValidator(number) {
 
 class GroupController {
     async index(){
-        const data = await Database.table('groups')
+        const groups = await Database.table('groups')
 
         return { status : 200 , error : undefined, data : groups}
     }

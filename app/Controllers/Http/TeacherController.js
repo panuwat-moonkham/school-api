@@ -13,7 +13,7 @@ function numberTypeParamValidator(number) {
 
 class TeacherController {
     async index(){
-        const data = await Database.table('teachers')
+        const teachers = await Database.table('teachers')
 
         return { status : 200 , error : undefined, data : teachers}
     }
