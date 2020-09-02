@@ -7,7 +7,13 @@ class Student extends Model {
     static get primaryKey(){
         return 'student_id'
     }
-    
+    static get createdAtColumn(){
+        return null;
+    }
+
+    static get updatedAtColumn(){
+        return null;
+    }
     enrollment(){
         return this.hasMany('App/Models/Enrollment')
     }

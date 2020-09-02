@@ -10,42 +10,41 @@ function numberTypeParamValidator(number) {
 }
 
 class GroupController {
-    async index(){
-        const groups = await Database.table('groups')
+    async index({request}){
+        const {references = undefined} = request.qs
+        
+        const subjects = Subject.query()
+        if(references){
+            const extractedRefences = references.split(",")
+            subjects.with(extractedRefences)
+        }
 
-        return { status : 200 , error : undefined, data : groups}
-    }
+        return { status : 200 , error : undefined, data :await subjects.fetch()}
+        }
 
     async show({request}){
         const { id } = request.params
+        const subject = await Subject.find(id)
 
-        const validatedValue = numberTypeParamValidator(id)
-
-        if(validatedValue.error) return {status: 500, error : validatedValue.error, data : undefined}
-
-        const group = await Database
-        .select('*')
-        .from('groups')
-        .where("group_id",id)
-        .first()
-
-        return{ status: 200, error : undefined, data : group ||{} }
+        return{ status: 200, error : undefined, data : subject ||{} }
     }
 
     async store ({request}){
         const {name} = request.body
+        const group = await Subject.create({name})
 
-        const missingKeys=[]
-        if(!name) missingKeys.push('name')
+        return {status : 200,error : undefined , data : group }
+    }
 
-        if(missingKeys.length)
-            return {status: 422, error:`${missingKeys} is missing.`, data:undefined}
-
+    async showGroup({request}){
+        const {id} = request.params
         const group = await Database
         .table('groups')
-        .insert({name})
+        .where({group_id: id})
+        .innerJoin('students','groups.group_id','students.group_id')
+        .first()
 
-        return {status : 200,error : undefined , data : {name} }
+        return {status: 200, error: undefined, data: group||{}}
     }
 
     async update({request}){
@@ -60,7 +59,7 @@ class GroupController {
 
         const group = await Database
         .table('groups')
-        .where({group_id: groupId})
+        .where({subject_id: groupId})
         .first()
 
         return {status: 200, error: undefined, data: group }

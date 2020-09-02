@@ -31,7 +31,7 @@ class TeacherController {
         .where("teacher_id",id)
         .first()
 
-        return{ status: 200, error : undefined, data : tracher ||{} }
+        return{ status: 200, error : undefined, data : teacher ||{} }
         //return teacher || {}
     }
 
