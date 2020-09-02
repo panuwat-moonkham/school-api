@@ -1,7 +1,7 @@
 'use strict'
 
 const Database = use('Database')
-const Group = use('App/Models/Group')
+
 
 function numberTypeParamValidator(number) {
     if(Number.isNaN(parseInt(number))) 
@@ -37,16 +37,6 @@ class GroupController {
         return {status : 200,error : undefined , data : group }
     }
 
-    async showGroup({request}){
-        const {id} = request.params
-        const group = await Database
-        .table('groups')
-        .where({group_id: id})
-        .innerJoin('students','groups.group_id','students.group_id')
-        .first()
-
-        return {status: 200, error: undefined, data: group||{}}
-    }
 
     async update({request}){
         const {body,params} = request
