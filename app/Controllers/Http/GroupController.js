@@ -1,6 +1,7 @@
 'use strict'
 
 const Database = use('Database')
+const Group = use('App/Models/Group')
 
 function numberTypeParamValidator(number) {
     if(Number.isNaN(parseInt(number))) 
@@ -13,25 +14,25 @@ class GroupController {
     async index({request}){
         const {references = undefined} = request.qs
         
-        const subjects = Subject.query()
+        const groups = Group.query()
         if(references){
             const extractedRefences = references.split(",")
-            subjects.with(extractedRefences)
+            groups.with(extractedRefences)
         }
 
-        return { status : 200 , error : undefined, data :await subjects.fetch()}
+        return { status : 200 , error : undefined, data :await groups.fetch()}
         }
 
     async show({request}){
         const { id } = request.params
-        const subject = await Subject.find(id)
+        const group = await Group.find(id)
 
-        return{ status: 200, error : undefined, data : subject ||{} }
+        return{ status: 200, error : undefined, data : group ||{} }
     }
 
     async store ({request}){
         const {name} = request.body
-        const group = await Subject.create({name})
+        const group = await Group.create({name})
 
         return {status : 200,error : undefined , data : group }
     }
@@ -59,7 +60,7 @@ class GroupController {
 
         const group = await Database
         .table('groups')
-        .where({subject_id: groupId})
+        .where({group_id: groupId})
         .first()
 
         return {status: 200, error: undefined, data: group }

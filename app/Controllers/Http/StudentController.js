@@ -2,6 +2,7 @@
 
 const Database = use('Database')
 const Hash = use('Hash')
+const Validator = use('Validator')
 
 function numberTypeParamValidator(number) {
     if(Number.isNaN(parseInt(number))) 
@@ -36,34 +37,36 @@ class StudentController {
     async store ({request}){
         const {first_name,last_name,email,password,group_id} = request.body
 
-        const missingKeys=[]
-        if(!first_name) missingKeys.push('first_name')
-        if(!last_name) missingKeys.push('last_name')
-        if(!email) missingKeys.push('email')
-        if(!password) missingKeys.push('password')
+        const rules ={
+            first_name:'required',
+            last_name:'required',
+            email:'required|email|unique:students,email',
+            password:'requiredmin:8'
+        }
 
-        if(missingKeys.length)
-            return {status: 422, error:`${missingKeys} is missing.`, data:undefined}
-        
+        const validation = await Validator.validateAll(request.body,rules)
+
+        if(validation.fails())
+            return {status: 422, error: validation.messages(), data: undefined}
 
         const hashedPassword = await Hash.make(password)
 
         const student = await Database
         .table('students')
-        .insert({first_name,last_name,email,password:hashedPassword,group_id})
+        .insert({first_name,last_name,email,password:hashedPassword})
 
-        return {status : 200,error : undefined , data : {first_name,last_name,email,password,group_id} }
+        return {status : 200,error : undefined , data : student }
     }
 
     async update({request}){
         const {body,params} = request
         const {id} = params
-        const {first_name,last_name,email,group_id} = body
+        const {first_name,last_name,email} = body
 
         const studentId = await Database
         .table('students')
         .where({student_id:id})
-        .update({first_name,last_name,email,group_id})
+        .update({first_name,last_name,email})
 
         const student = await Database
         .table('students')
