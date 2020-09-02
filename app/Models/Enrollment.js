@@ -5,7 +5,7 @@ const Model = use('Model')
 
 class Enrollment extends Model {
     static get primaryKey(){
-        return 'teacher_id'
+        return 'enrollment_id'
     }
 
     static get createdAtColumn(){
@@ -18,6 +18,9 @@ class Enrollment extends Model {
 
     subject(){
         return this.belongsTo('App/Models/Subject')
+    }
+    student(){
+        return this.belongsTo('App/Models/Student')
     }
 
 }
