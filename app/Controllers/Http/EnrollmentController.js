@@ -36,6 +36,7 @@ class EnrollmentController {
         .table('enrollments')
         .where({enrollment_id: id})
         .innerJoin('students','enrollments.student_id','students.student_id')
+        .innerJoin('subjects','enrollments.subject_id','subjects.subject_id')
         .first()
 
         return {status: 200, error: undefined, data: enrollment||{}}

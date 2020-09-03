@@ -69,7 +69,7 @@ class TeacherController {
         .table('teachers')
         .insert({first_name,last_name,email,password:hashedPassword})
 
-        return {status : 200,error : undefined , data : {first_name,last_name,email,password} }
+        return {status : 200,error : undefined , data : teacher }
     }
 
     async update({request}){

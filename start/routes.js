@@ -25,8 +25,10 @@ Route.group(()=>{
   // api start here
  Route.resource('/teachers','TeacherController')
  Route.resource('/students','StudentController')
+ Route.get('/student/:id/group','StudentController.showGroup')
  Route.resource('/groups','GroupController')
  Route.resource('/enrollments','EnrollmentController')
+ Route.get('/enrollment/:id/student/subject','EnrollmentController.showEnrollment')
  Route.resource('/subjects','SubjectController')
  Route.get('/subject/:id/teacher','SubjectController.showTeacher')
 

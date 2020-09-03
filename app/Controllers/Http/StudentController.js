@@ -31,7 +31,7 @@ class StudentController {
 
         return{ status: 200, error : undefined, data : student ||{} }
     }
-    async showStudent({request}){
+    async showGroup({request}){
         const {id} = request.params
         const student = await Database
         .table('students')
@@ -39,11 +39,11 @@ class StudentController {
         .innerJoin('groups','students.group_id','groups.group_id')
         .first()
 
-        return {status: 200, error: undefined, data: student||{}}
+        return {status: 200, error: undefined, data: student || {}}
     }
 
     async store ({request}){
-        const {first_name,last_name,email,hashedPassword,group_id} = request.body
+        const {first_name,last_name,email,password,group_id} = request.body
         const rules ={
             first_name:'required',
             last_name:'required',

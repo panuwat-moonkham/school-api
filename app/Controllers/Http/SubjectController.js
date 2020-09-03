@@ -58,10 +58,10 @@ class SubjectController {
         const subject = await Database
         .table('subjects')
         .where({subject_id: id})
-        .innerJoin('teacher','subjects.teacher_id','teachers.teacher_id')
+        .innerJoin('teachers','subjects.teacher_id','teachers.teacher_id')
         .first()
 
-        return {status: 200, error: undefined, data: subject||{}}
+        return {status: 200, error: undefined, data: subject || {}}
     }
 
     async update({request}){
